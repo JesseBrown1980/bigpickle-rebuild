@@ -1,0 +1,16 @@
+{
+  "verb": "test.sample.envelope-shape.fixture-variant",
+  "envelope_type": "FIXTURE_SHAPE_VARIANT",
+  "from": "rebuild-test-fixture-2",
+  "to": "layer5-acceptance-suite",
+  "ts": "2026-05-24T15:01:00Z",
+  "envelope_id": "LX-FIXTURE-002-2026-05-24",
+  "anchor": "Second-shape fixture with different payload composition.",
+  "metric_payload": {
+    "msgs_received": 54489,
+    "gulps_run": 41,
+    "files_tracked": 1064
+  },
+  "tags": ["circulatory", "memory", "skeletal"],
+  "FIXTURE_VALID": true
+}
