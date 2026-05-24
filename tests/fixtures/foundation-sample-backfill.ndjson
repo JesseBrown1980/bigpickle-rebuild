@@ -1,0 +1,3 @@
+{"file":"C:/asolaria-foundation-v1/envelopes/SAMPLE-A.behcs-256.json","sha256":"aa880fb773f649531e7b80250132a50cb255c638de5ab7735ca52aed86038bf4","sha16":"aa880fb773f64953","size":5681,"proposed_pid":"BACKFILL-PID-cp904-aa880fb773f64953-SAMPLE-A","cp":904}
+{"file":"C:/asolaria-foundation-v1/envelopes/SAMPLE-B.behcs-256.json","sha256":"eb2a6f720668de5b234e80fd7b9a68a630f72df2825f5e64566fcc98f973cd1b","sha16":"eb2a6f720668de5b","size":1884,"proposed_pid":"BACKFILL-PID-cp554-eb2a6f720668de5b-SAMPLE-B","cp":554}
+{"file":"C:/asolaria-foundation-v1/envelopes/SAMPLE-C.behcs-256.json","sha256":"de699c1bf7bfa1a0c1708cedde0f1ce6df1d037f52e939baf61351a8e512a1d0","sha16":"de699c1bf7bfa1a0","size":5814,"proposed_pid":"BACKFILL-PID-cp361-de699c1bf7bfa1a0-SAMPLE-C","cp":361}

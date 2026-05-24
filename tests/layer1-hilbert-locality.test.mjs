@@ -46,3 +46,41 @@ test('hilbert encoding is bijective on the 3D grid as well', () => {
   }
   assert.equal(seen.size, total);
 });
+
+// 3D locality — honest test. The Skilling n-D implementation gives bijection
+// + BOUNDED distortion, but NOT strict Hilbert (distance == 1) for n >= 3.
+// True 3D Hilbert would require a recursive 8-cube rotation table; that
+// upgrade is deferred. The test pins what we actually have so regression is
+// visible if anyone changes the implementation.
+
+test('3D Hilbert: consecutive Manhattan distance is bounded (Skilling distortion)', () => {
+  const bits = 3;
+  const total = 1 << (3 * bits);
+  let maxD = 0;
+  let prev = hilbertDecode(0, { dimensions: 3, bits });
+  for (let i = 1; i < total; i++) {
+    const curr = hilbertDecode(i, { dimensions: 3, bits });
+    const d = manhattan(prev, curr);
+    if (d > maxD) maxD = d;
+    prev = curr;
+  }
+  // Observed bound for current Skilling impl: 5. Asserted ceiling: 8.
+  assert.ok(maxD <= 8, `3D max Manhattan distance ${maxD} exceeded bound 8`);
+});
+
+test('3D Hilbert: average consecutive distance stays near 1 (locality preserved)', () => {
+  const bits = 3;
+  const total = 1 << (3 * bits);
+  let sumD = 0;
+  let count = 0;
+  let prev = hilbertDecode(0, { dimensions: 3, bits });
+  for (let i = 1; i < total; i++) {
+    const curr = hilbertDecode(i, { dimensions: 3, bits });
+    sumD += manhattan(prev, curr);
+    count++;
+    prev = curr;
+  }
+  const avg = sumD / count;
+  // Observed avg ≈ 1.16. Assert ≤ 2 — anything higher means locality is lost.
+  assert.ok(avg <= 2, `3D average Manhattan distance ${avg.toFixed(3)} > 2`);
+});
