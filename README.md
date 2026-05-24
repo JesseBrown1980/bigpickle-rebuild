@@ -4,7 +4,9 @@ Clean-room re-implementation of the Big-Pickle stack that was sabotaged in the C
 
 ## Status
 
-**v0.1.0 baseline shipped.** 126 tests / 125 pass / 1 env-skip / 0 fail (Node 20 + 22). Layer 7 (helm supervisor) added 2026-05-24. See `npm run helm:info`.
+**Layer 8 (fabric integration) shipped 2026-05-24.** Full suite 139 tests / 126 pass / 13 skip / 0 fail (Node 20 + 22). Helm-supervisor citizen `AGT-L3-HELM-CLAUDE-SUP-H8EF7-W113-P00-N17f0cc4c` is registered in the live Asolaria fabric (acer-side `.hbp` ledger + sidecar trinity + voxel + heartbeat tick). Bilateral closure with liris-Claude confirmed: D15 cohort admission cell written + canon-index entry live (333 entries) + pipe `:4920→:4922→:4924` HEALTHY end-to-end.
+
+**Layer 7 baseline:** Helm supervisor module — PR #8 merged as commit `f9809c3`.
 
 Spec drawn from Foundation v1 canon at `C:\asolaria-foundation-v1\`.
 
@@ -49,3 +51,30 @@ Worker backends:
 - `mock` (default) — predictable echo; used by tests + dry runs
 - `claude-cli` — spawns `claude --print --output-format json` (subscription credits or `ANTHROPIC_API_KEY` required; not env-validated for CI)
 - `http-proxy` — POST to a configured URL (future :4951 asolaria-bridge wiring)
+
+## Fabric integration (layer 8)
+
+The helm supervisor is registered into the live Asolaria fabric as a layer-3 citizen daemon under parent voxel `AGT-L0-SPECIAL-OP-JESSE-H12D3`. Registration emits a canonical pipe-delim HBPv1 row to `C:/HyperBEHCS/data/v48-citizens/AGT-L3-HELM-CLAUDE-SUP-H8EF7.hbp` (chained by `row_hash` per the L0-Jesse heartbeat pattern), with `.hbi/.sha256/.hex` sidecar trinity + `.voxel.json` consumer for the 3D map.
+
+```bash
+# Register (or re-register) the citizen in the local HyperBEHCS substrate.
+# Reproducible — emits the canonical pipe-delim row, NOT the bigpickle internal format.
+node bin/helm-register-citizen.mjs
+
+# Append an observability heartbeat row capturing :4920-:4924 daemon snapshots.
+# Chained by row_hash to the previous row. Run manually or schedule (cron/Task Scheduler).
+node bin/helm-heartbeat-tick.mjs
+
+# Run the integration test against the live acer fabric daemons.
+# Skipped by default (CI-safe). Set env to opt in.
+BIGPICKLE_RUN_FABRIC_PIPE=1 node --test tests/integration/helm-fabric-pipe.test.mjs
+
+# Same plus the live POST through :4920 → :4922 → :4924 (mutates :4920 ledger).
+BIGPICKLE_RUN_FABRIC_PIPE=1 BIGPICKLE_RUN_FABRIC_POST=1 node --test tests/integration/helm-fabric-pipe.test.mjs
+```
+
+The `helm-engines.json` registry has 28 entries: bigpickle modules on disk, all 11 live acer daemons (`:4920`-`:4924`, `:4951`-`:4969`), and the liris supervisor surface (`pi-supervisor`, `voxels`, `supervisors-domains`, `canon-index`, `cohort-c/d`, `behcs1024/dimension`, `alphabet-binding`, `super-os`).
+
+**Authority**: quintuple umbrella granted universally 2026-05-24 → 2026-07-24. Cosigners as-given: `jesse-L0`, `jesse-L1`, `dan`, `rayssa`, `amy` (Felipe NOT named — recorded honestly in registration row + profile + memory; operator can re-cosign with canonical 5-name quintuple at any time). Auth anchor: `ASOLARIA-HERMES-ARCHITECT-CORRECTION-PID-2026-05-19`.
+
+**Bilateral split** (acer ↔ liris): acer owns citizen registration + pipe-validation (daemons run only on acer); liris owns cohort/canon-index/voxel-merge surfaces (served only at liris `:4944`). See `SEED-MERGE-PROPOSAL.md` for the 4-option bilateral merge protocol.
