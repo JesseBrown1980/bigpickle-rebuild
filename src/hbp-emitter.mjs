@@ -25,7 +25,7 @@ function canonicalStringify(value) {
   return '{' + keys.map((k) => JSON.stringify(k) + ':' + canonicalStringify(value[k])).join(',') + '}';
 }
 
-function serializeEnvelope(envelope) {
+export function serializeEnvelope(envelope) {
   const type = envelope.type ?? 'message';
   const lines = [
     `${MAGIC} ${type}`,
