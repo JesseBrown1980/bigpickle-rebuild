@@ -8,7 +8,15 @@
     "test": "node --test",
     "test:layer1": "node --test tests/layer1-*.test.mjs",
     "test:layer2": "node --test tests/layer2-*.test.mjs",
-    "bench": "node tests/bench/throughput.mjs"
+    "test:layer7": "node --test tests/layer7-*.test.mjs",
+    "bench": "node tests/bench/throughput.mjs",
+    "helm": "node bin/helm",
+    "helm:info": "node bin/helm info",
+    "helm:tick": "node bin/helm tick",
+    "helm:start": "node bin/helm start"
+  },
+  "bin": {
+    "helm": "./bin/helm"
   },
   "engines": {
     "node": ">=20"

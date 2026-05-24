@@ -1,0 +1,101 @@
+{
+  "comment": "Engine registry consumed by the helm supervisor. Add new engines here; the supervisor reads fresh per resolve so changes are picked up without restart. Paths use forward slashes (Node accepts both on Windows).",
+  "engines": [
+    {
+      "name": "pid-minter",
+      "kind": "file",
+      "path": "D:/bigpickle-rebuild/src/pid-minter.mjs",
+      "note": "white-room PID minter (Foundation v1 algebra)"
+    },
+    {
+      "name": "pid-chain-revolver",
+      "kind": "file",
+      "path": "D:/bigpickle-rebuild/src/pid-chain-revolver.mjs",
+      "note": "per-spawn PID rotor; BigPickle canonical multiplex pattern"
+    },
+    {
+      "name": "tuple-tag",
+      "kind": "file",
+      "path": "D:/bigpickle-rebuild/src/tuple-tag.mjs",
+      "note": "47D tuple-tag encoder/decoder (live base, 49D/50D extensible)"
+    },
+    {
+      "name": "hookwall",
+      "kind": "file",
+      "path": "D:/bigpickle-rebuild/src/hookwall.mjs",
+      "note": "envelope-emission gate"
+    },
+    {
+      "name": "hbp-emitter",
+      "kind": "file",
+      "path": "D:/bigpickle-rebuild/src/hbp-emitter.mjs",
+      "note": "HBP envelope + sidecar trinity writer"
+    },
+    {
+      "name": "aot-runner",
+      "kind": "file",
+      "path": "D:/bigpickle-rebuild/src/aot-runner.mjs",
+      "note": "Algorithm-of-Thought single-call tree search (mock LLM v1)"
+    },
+    {
+      "name": "gnn-edge-ledger",
+      "kind": "file",
+      "path": "D:/bigpickle-rebuild/src/gnn-edge-ledger.mjs",
+      "note": "in-memory GNN edge ledger; AoT branch outcomes append here"
+    },
+    {
+      "name": "foundation-envelope-adapter",
+      "kind": "file",
+      "path": "D:/bigpickle-rebuild/src/foundation-envelope-adapter.mjs",
+      "note": "loads Foundation v1 envelopes (.behcs-256.json + .ndjson)"
+    },
+    {
+      "name": "triple-quant",
+      "kind": "file",
+      "path": "C:/HyperBEHCS/lib/hyperbehcs-core.cjs",
+      "note": "Polar + Turbo + JL quant engine (per AGENT.md Step 0); credit/access TBD"
+    },
+    {
+      "name": "behcs-1024-atlas",
+      "kind": "file",
+      "path": "C:/asolaria-behcs-256/data/behcs/codex/alphabet-1024.json",
+      "note": "1024-glyph atlas; encoder swap is operator-quintuple-cosign-gated"
+    },
+    {
+      "name": "fabric-tool-advisor",
+      "kind": "http",
+      "url": "http://192.168.1.17:4944/api/tool-advisor",
+      "note": "liris-side advisor; POST with {verb,target,agent_pid,scope,vantage}"
+    },
+    {
+      "name": "asolaria-bridge-claude-cli",
+      "kind": "http",
+      "url": "http://127.0.0.1:4951",
+      "note": "acer-local claude-cli (subscription) bridge; no public dispatch endpoint as of 2026-05-24"
+    },
+    {
+      "name": "cosign-chain-daemon",
+      "kind": "http",
+      "url": "http://127.0.0.1:4953",
+      "note": "acer single-writer cosign chain; head_seq tracked here"
+    },
+    {
+      "name": "hyperbehcs-library-50d-vec",
+      "kind": "http",
+      "url": "http://127.0.0.1:4924",
+      "note": "50-dim embeddings + sqlite-vec sidecar"
+    },
+    {
+      "name": "vote-quorum-daemon",
+      "kind": "http",
+      "url": "http://127.0.0.1:4952",
+      "note": "acer voting quorum"
+    },
+    {
+      "name": "dual-emit-gate-daemon",
+      "kind": "http",
+      "url": "http://127.0.0.1:4955",
+      "note": "V38-002 dual-emit gate"
+    }
+  ]
+}

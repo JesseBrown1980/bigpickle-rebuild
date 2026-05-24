@@ -1,0 +1,98 @@
+#!/usr/bin/env node
+// Helm supervisor entrypoint.
+//
+// Usage:
+//   bin/helm start [--queue <dir>] [--backend mock|claude-cli|http-proxy] [--interval-ms 1000]
+//   bin/helm tick  [--queue <dir>] [--backend ...]
+//   bin/helm info
+//
+// Default queue: D:/Asolaria-External/helm/queue (created if missing)
+// Default backend: mock (claude-cli requires subscription credits or ANTHROPIC_API_KEY)
+
+import { existsSync, mkdirSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { createSupervisor, tickOnce, start } from '../src/helm-supervisor.mjs';
+import { enumerateDrives } from '../src/drive-enumerator.mjs';
+import { loadEngineRegistry, registryEntries } from '../src/engine-registry.mjs';
+
+function parseArgs(argv) {
+  const out = { _: [] };
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i];
+    if (a.startsWith('--')) {
+      const key = a.slice(2);
+      const val = argv[i + 1] && !argv[i + 1].startsWith('--') ? argv[++i] : true;
+      out[key] = val;
+    } else {
+      out._.push(a);
+    }
+  }
+  return out;
+}
+
+function defaultQueue() {
+  const q = 'D:/Asolaria-External/helm/queue';
+  if (!existsSync(q)) mkdirSync(q, { recursive: true });
+  return q;
+}
+
+function defaultEngines() {
+  const local = resolve('helm-engines.json');
+  if (existsSync(local)) return local;
+  return resolve('D:/bigpickle-rebuild/helm-engines.json');
+}
+
+async function main() {
+  const [, , cmd, ...rest] = process.argv;
+  const args = parseArgs(rest);
+  const queueRoot = args.queue || defaultQueue();
+  const backend = args.backend || 'mock';
+
+  if (cmd === 'info' || !cmd) {
+    const drives = enumerateDrives().filter((d) => d.mounted);
+    const reg = loadEngineRegistry(defaultEngines());
+    console.log(JSON.stringify({
+      helm: 'bigpickle-rebuild helm-supervisor v0.1.0',
+      queueRoot,
+      defaultBackend: backend,
+      drives: drives.map((d) => d.letter),
+      engineCount: registryEntries(reg).length,
+      engines: registryEntries(reg).map((e) => ({ name: e.name, kind: e.kind })),
+      pid: process.pid,
+    }, null, 2));
+    return;
+  }
+
+  const sup = createSupervisor({ queueRoot, backend });
+
+  if (cmd === 'tick') {
+    const res = await tickOnce(sup);
+    console.log(JSON.stringify({ result: res, stats: sup.stats }, null, 2));
+    return;
+  }
+
+  if (cmd === 'start') {
+    const intervalMs = Number(args['interval-ms'] || 1000);
+    console.log(JSON.stringify({
+      helm: 'start',
+      queueRoot,
+      backend,
+      intervalMs,
+      parentPID: sup.parentPID,
+      ts: new Date().toISOString(),
+    }));
+    const stop = start(sup, { intervalMs });
+    process.on('SIGINT', () => { stop(); process.exit(0); });
+    process.on('SIGTERM', () => { stop(); process.exit(0); });
+    // Keep alive
+    return new Promise(() => {});
+  }
+
+  console.error(`unknown command: ${cmd}\nUsage: helm {start|tick|info} [--queue dir] [--backend mock|claude-cli|http-proxy] [--interval-ms N]`);
+  process.exit(2);
+}
+
+main().catch((err) => {
+  console.error('helm: fatal:', err.message);
+  process.exit(1);
+});
