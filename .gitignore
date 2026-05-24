@@ -9,3 +9,4 @@ envelopes-out/*.hex
 !envelopes-out/.gitkeep
 coverage/
 .nyc_output/
+.claude/
