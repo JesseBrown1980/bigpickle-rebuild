@@ -1,0 +1,11 @@
+node_modules/
+*.log
+.env
+.DS_Store
+envelopes-out/*.hbp
+envelopes-out/*.hbi
+envelopes-out/*.sha256
+envelopes-out/*.hex
+!envelopes-out/.gitkeep
+coverage/
+.nyc_output/

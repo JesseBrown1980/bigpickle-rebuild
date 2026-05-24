@@ -1,0 +1,16 @@
+{
+  "name": "bigpickle-rebuild",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Clean-room re-implementation of the Big-Pickle stack per Foundation v1 canon.",
+  "scripts": {
+    "test": "node --test tests/",
+    "test:layer1": "node --test tests/layer1-*.test.mjs",
+    "test:layer2": "node --test tests/layer2-*.test.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "UNLICENSED"
+}
