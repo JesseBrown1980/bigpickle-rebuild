@@ -63,3 +63,57 @@ export function loadFoundationEnvelopes(dir, { pattern = /\.behcs-256\.json$/ } 
     envelope: loadFoundationEnvelope(join(dir, f)),
   }));
 }
+
+// NDJSON envelopes (e.g. T3-BACKFILL-PID-INDEX, T3-ORPHAN-PID-MINT-MANIFEST)
+// are newline-delimited JSON where each line is a separate record. The
+// foundation queue mixes both shapes; this loader handles the line-shape.
+
+function adaptNdjsonLine(raw) {
+  if (!raw || typeof raw !== 'object') {
+    throw new TypeError('adaptNdjsonLine: parsed line must be an object');
+  }
+  const tag = new Array(47).fill('');
+  tag[0] = String(raw.proposed_pid ?? raw.file ?? '');           // D1 ACTOR-ish
+  tag[15] = String(raw.sha16 ?? (raw.sha256 ? raw.sha256.slice(0, 16) : '')); // D16 PID
+  tag[37] = String(raw.sha256 ?? '');                            // D38 ENCRYPTION (sha256 attestation)
+  return {
+    type: String(raw.envelope_type ?? 'BACKFILL-PID-MANIFEST-LINE'),
+    tupleTag: tag,
+    payload: raw,
+    metadata: {
+      file: String(raw.file ?? ''),
+      sha256: String(raw.sha256 ?? ''),
+      sha16: String(raw.sha16 ?? ''),
+      proposed_pid: String(raw.proposed_pid ?? ''),
+      cp: String(raw.cp ?? ''),
+      size: String(raw.size ?? ''),
+    },
+  };
+}
+
+export function loadFoundationNdjson(ndjsonPath) {
+  if (!existsSync(ndjsonPath)) {
+    throw new Error(`loadFoundationNdjson: file not found: ${ndjsonPath}`);
+  }
+  const text = readFileSync(ndjsonPath, 'utf8');
+  const lines = text.split(/\r?\n/).filter((l) => l.trim().length > 0);
+  return lines.map((line, idx) => {
+    try {
+      const parsed = JSON.parse(line);
+      return adaptNdjsonLine(parsed);
+    } catch (err) {
+      throw new Error(`loadFoundationNdjson: parse error on line ${idx + 1}: ${err.message}`);
+    }
+  });
+}
+
+export function loadFoundationNdjsonDir(dir, { pattern = /\.ndjson$/ } = {}) {
+  if (!existsSync(dir)) return [];
+  const st = statSync(dir);
+  if (!st.isDirectory()) return [];
+  const files = readdirSync(dir).filter((f) => pattern.test(f));
+  return files.map((f) => ({
+    file: f,
+    envelopes: loadFoundationNdjson(join(dir, f)),
+  }));
+}

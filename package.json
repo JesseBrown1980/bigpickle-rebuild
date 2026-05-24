@@ -7,7 +7,8 @@
   "scripts": {
     "test": "node --test",
     "test:layer1": "node --test tests/layer1-*.test.mjs",
-    "test:layer2": "node --test tests/layer2-*.test.mjs"
+    "test:layer2": "node --test tests/layer2-*.test.mjs",
+    "bench": "node tests/bench/throughput.mjs"
   },
   "engines": {
     "node": ">=20"
