@@ -68,6 +68,66 @@
       "note": "liris-side advisor; POST with {verb,target,agent_pid,scope,vantage}"
     },
     {
+      "name": "liris-fabric-everything",
+      "kind": "http",
+      "url": "http://192.168.1.17:4944/api/everything",
+      "note": "federation summary catalog; lists every supervisor + dashboard URL"
+    },
+    {
+      "name": "liris-pi-supervisor",
+      "kind": "http",
+      "url": "http://192.168.1.17:4944/api/pi-supervisor",
+      "note": "supervisor-of-supervisors per project_pi_as_fabric_citizen_redesign canon"
+    },
+    {
+      "name": "liris-supervisors-domains-234",
+      "kind": "http",
+      "url": "http://192.168.1.17:4944/api/supervisors-domains",
+      "note": "234-supervisor council; dominant domains per cycle"
+    },
+    {
+      "name": "liris-voxels-3d-map",
+      "kind": "http",
+      "url": "http://192.168.1.17:4944/api/voxels",
+      "note": "bilateral-3d-join-v1 schema; helm citizen voxel proposed via .voxel.json"
+    },
+    {
+      "name": "liris-canon-index",
+      "kind": "http",
+      "url": "http://192.168.1.17:4944/api/canon-index",
+      "note": "333 entries 2026-05-24; helm citizen has dedicated section"
+    },
+    {
+      "name": "liris-cohort-c",
+      "kind": "http",
+      "url": "http://192.168.1.17:4944/api/cohort-c",
+      "note": "24-cell CONVERGE cohort"
+    },
+    {
+      "name": "liris-cohort-d",
+      "kind": "http",
+      "url": "http://192.168.1.17:4944/api/cohort-d",
+      "note": "16-cell CONVERGE cohort; D15 is helm-citizen admission cell"
+    },
+    {
+      "name": "liris-behcs1024-dimension",
+      "kind": "http",
+      "url": "http://192.168.1.17:4944/api/behcs1024/dimension",
+      "note": "BEHCS-1024 sha16=7a1b9417 tuple_dim_op=60 cat=50 cp=1024"
+    },
+    {
+      "name": "liris-alphabet-binding",
+      "kind": "http",
+      "url": "http://192.168.1.17:4944/api/alphabet-binding",
+      "note": "alphabet binding; acer=FULL falcon=CANONICAL_KEEPER liris=BINDING_ADOPTED"
+    },
+    {
+      "name": "liris-super-os-dashboard",
+      "kind": "http",
+      "url": "http://192.168.1.17:4944/super-os",
+      "note": "SUPER ASOLARIA OS dashboard (HTML); operator-readable surface"
+    },
+    {
       "name": "asolaria-bridge-claude-cli",
       "kind": "http",
       "url": "http://127.0.0.1:4951",
@@ -77,7 +137,31 @@
       "name": "cosign-chain-daemon",
       "kind": "http",
       "url": "http://127.0.0.1:4953",
-      "note": "acer single-writer cosign chain; head_seq tracked here"
+      "note": "acer single-writer cosign chain; head_seq tracked here; no public /api/append endpoint as of 2026-05-24"
+    },
+    {
+      "name": "hyperbehcs-gnn-drain",
+      "kind": "http",
+      "url": "http://127.0.0.1:4920",
+      "note": "GNN ingest pipe; POST /api/gnn-drain/ingest accepts envelopes (NOT a hookwall substitute — pipe-health only)"
+    },
+    {
+      "name": "hyperbehcs-whiteroom-drain",
+      "kind": "http",
+      "url": "http://127.0.0.1:4921",
+      "note": "OmniWhiteRoom mints; 258K+ as of 2026-05-24"
+    },
+    {
+      "name": "hyperbehcs-library-indexer",
+      "kind": "http",
+      "url": "http://127.0.0.1:4922",
+      "note": "library indexer; scans HyperBEHCS/data + tracks indexed_total"
+    },
+    {
+      "name": "sustained-wave-generator",
+      "kind": "http",
+      "url": "http://127.0.0.1:4923",
+      "note": "wave generator; 137K+ waves as of 2026-05-24"
     },
     {
       "name": "hyperbehcs-library-50d-vec",
@@ -96,6 +180,54 @@
       "kind": "http",
       "url": "http://127.0.0.1:4955",
       "note": "V38-002 dual-emit gate"
+    },
+    {
+      "name": "omni-router-stub",
+      "kind": "http",
+      "url": "http://127.0.0.1:4957",
+      "note": "OMNI_ROUTER stub (5 reqs as of probe 2026-05-24)"
+    },
+    {
+      "name": "ghost-envelope-gc-daemon",
+      "kind": "http",
+      "url": "http://127.0.0.1:4958",
+      "note": "V38-004 ghost-envelope GC"
+    },
+    {
+      "name": "helm-citizen-ms-graph",
+      "kind": "http",
+      "url": "http://127.0.0.1:4965",
+      "note": "V52-D-V48 helm-band citizen (ms-graph)"
+    },
+    {
+      "name": "helm-citizen-azure-arm",
+      "kind": "http",
+      "url": "http://127.0.0.1:4966",
+      "note": "V52-D-V48 helm-band citizen (azure-arm)"
+    },
+    {
+      "name": "helm-citizen-aws-api",
+      "kind": "http",
+      "url": "http://127.0.0.1:4967",
+      "note": "V52-D-V48 helm-band citizen (aws-api)"
+    },
+    {
+      "name": "vector-citizen-ms-teams",
+      "kind": "http",
+      "url": "http://127.0.0.1:4968",
+      "note": "V52-D-V48 vector-band citizen (ms-teams)"
+    },
+    {
+      "name": "vector-citizen-onedrive",
+      "kind": "http",
+      "url": "http://127.0.0.1:4969",
+      "note": "V52-D-V48 vector-band citizen (onedrive)"
+    },
+    {
+      "name": "asolaria-bus-LAW-001",
+      "kind": "http",
+      "url": "http://192.168.100.1:4947",
+      "note": "LAW-001 immutable bus; unreachable from acer+liris (different network segment) as of 2026-05-24"
     }
   ]
 }
