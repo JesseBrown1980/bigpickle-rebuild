@@ -1,0 +1,27 @@
+{
+  "verb": "test.sample.envelope-shape.fixture",
+  "envelope_type": "FIXTURE_SHAPE_SAMPLE",
+  "from": "rebuild-test-fixture",
+  "to": "layer5-acceptance-suite",
+  "ts": "2026-05-24T15:00:00Z",
+  "envelope_id": "LX-FIXTURE-001-2026-05-24",
+  "anchor": "Synthetic fixture mirroring the Foundation v1 envelope shape (verb, envelope_type, from, to, ts, envelope_id, plus arbitrary payload fields). Not a cosigned canon artifact — only the SHAPE is reproduced for CI acceptance testing.",
+  "operator_cosign_in_writing": {
+    "fixture_author": "AUTHORIZE",
+    "window": "ci-only",
+    "anchored_at": "2026-05-24T15:00:00Z"
+  },
+  "fixture_payload": {
+    "type": "phase-7-shape-mirror",
+    "step_count": 7,
+    "status": "complete"
+  },
+  "halt_invariants": [
+    "no live-pipe touch",
+    "fixture-only",
+    "ci-safe"
+  ],
+  "leaf_holds": false,
+  "apex_holds": false,
+  "FIXTURE_VALID": true
+}
