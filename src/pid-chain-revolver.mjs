@@ -9,6 +9,7 @@
 
 import { mintPID } from './pid-minter.mjs';
 import { primeAt } from './primes.mjs';
+import { preWarmCandidates } from './mtp-heads.mjs';
 
 const LANE_CYCLE = ['nervous', 'circulatory', 'skeletal', 'muscular', 'immune', 'memory'];
 
@@ -39,5 +40,45 @@ export class PIDChainRevolver {
 
   reset() {
     this.counter = 0;
+  }
+
+  // === MTP-driven pre-warm (Triad layer 4 wire) ============================
+  // Returns K speculative chamber-PIDs derived from MTP zeta-head predictions.
+  // PURE: no mutation of revolver state. Caller decides allocation.
+  // Spec: project_bilateral_synaptic_substrate_LIVE_2026_05_25 (post-Triad wire)
+  preWarm(opts = {}) {
+    const k = opts.k ?? 4;
+    const depth = opts.depth ?? 1;
+    const seed = opts.seed ?? 0;
+    const cp0 = Math.max(2, opts.cp0 ?? (this.counter % 1024));
+    const mtp = preWarmCandidates({ cp0, k, depth, seed, profPid: this.anchor });
+    return {
+      algorithm: 'pid-chain-revolver-mtp-prewarm.v1',
+      anchor: this.anchor,
+      counter_at_prewarm: this.counter,
+      cp0,
+      k,
+      candidates: mtp.candidates.map((c) => {
+        const actor = c.cp % this.alphabet;
+        const lane = LANE_CYCLE[c.cp % LANE_CYCLE.length];
+        const prime = this.primeAt(c.cp % 1000);
+        const speculativePid = this.mintPID({
+          actor,
+          device: this.anchor,
+          lane,
+          prime,
+          alphabet: this.alphabet,
+        });
+        return {
+          head_index: c.head_index,
+          cp_predicted: c.cp,
+          bh_coord_predicted: c.bh_coord,
+          speculative_pid: speculativePid,
+          actor,
+          lane,
+          prime,
+        };
+      }),
+    };
   }
 }
