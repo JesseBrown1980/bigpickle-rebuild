@@ -45,6 +45,7 @@ export const CITIZENS = Object.freeze([
   { id: 'abacusai',       kind: 'cli', cmd: 'abacusai',   cp: 730, license: 'subscription-abacusai',  desc: 'AbacusAI app/CLI' },
   { id: 'auggie',         kind: 'cli', cmd: 'auggie',     cp: 735, license: 'subscription-augment',   desc: 'Auggie CLI (Augment)' },
   { id: 'augment-code',   kind: 'cli', cmd: 'augment',    cp: 740, license: 'subscription-augment',   desc: 'Augment Code CLI' },
+  { id: 'kimi-code',      kind: 'cli', cmd: 'kimi',       cp: 745, license: 'mit-moonshot-oauth',     desc: 'Moonshot AI Kimi Code CLI (MIT, single-binary, MCP + lifecycle hooks)' },
 ]);
 
 // === Pure: PID + glyph + cube address per citizen =========================

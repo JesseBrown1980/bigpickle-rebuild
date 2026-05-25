@@ -64,12 +64,22 @@ describe('model-citizen-rotator — CITIZENS registry', () => {
     assert.ok(ids.has('lms'));
     assert.ok(ids.has('gcloud'));
   });
-  test('includes operator-extension citizens (cursor, abacusai, auggie, augment-code)', () => {
+  test('includes operator-extension citizens (cursor, abacusai, auggie, augment-code, kimi-code)', () => {
     const ids = new Set(CITIZENS.map(c => c.id));
     assert.ok(ids.has('cursor'));
     assert.ok(ids.has('abacusai'));
     assert.ok(ids.has('auggie'));
     assert.ok(ids.has('augment-code'));
+    assert.ok(ids.has('kimi-code'));
+  });
+
+  test('kimi-code is MIT-licensed Moonshot single-binary', () => {
+    const kimi = CITIZENS.find(c => c.id === 'kimi-code');
+    assert.ok(kimi, 'kimi-code citizen missing');
+    assert.strictEqual(kimi.kind, 'cli');
+    assert.strictEqual(kimi.cmd, 'kimi');
+    assert.match(kimi.license, /mit/i);
+    assert.match(kimi.desc, /Moonshot|Kimi/i);
   });
 });
 
