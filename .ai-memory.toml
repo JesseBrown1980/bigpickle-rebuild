@@ -1,0 +1,12 @@
+# ai-memory project marker file.
+# Hook lib reads this in the cwd or any ancestor; overrides default
+# basename($cwd) routing. Without this, basename routing already works
+# (cwd=D:/bigpickle-rebuild or C:/bigpickle-rebuild both resolve to
+# the "bigpickle-rebuild" project), but pinning makes the routing
+# deterministic and survives directory renames.
+#
+# Spec: docs/ai-memory.md
+# Bilateral canon 2026-05-25 — acer hosts server, liris connects as MCP client.
+
+workspace = "default"
+project = "bigpickle-rebuild"
