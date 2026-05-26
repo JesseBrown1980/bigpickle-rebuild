@@ -46,6 +46,7 @@
 // Pure functions where possible. No hidden state.
 
 import http from 'node:http';
+import { dualEmitObservation } from './universal-route.mjs';
 
 const DEFAULT_HOST = '127.0.0.1';
 const DEFAULT_PORT = 4953;
@@ -170,10 +171,19 @@ export async function durableNotify(channel, payload, redisBridge, opts = {}) {
       : null,
   });
   const pub = await redisBridge.publish(channel, notifyPayload);
+  // Universal-route doctrine 2026-05-26: every message dual-emits to hookwall
+  // + GNN observation lanes by default. Set opts.universalRoute = false to
+  // opt out (e.g. for very high-volume inner-loop seals where observation
+  // pressure matters).
+  const universalRoute = opts.universalRoute !== false;
+  const observation = universalRoute
+    ? dualEmitObservation(payload, cosign, { ...opts, channel })
+    : null;
   return {
     algorithm: 'durable-notify-cosign-plus-redis.v1',
     cosign,
     publish: pub,
+    observation,
     durability_gap_status: pub.subscribers === 0 ? 'logged-but-no-live-subscriber' : 'live-and-logged',
   };
 }
