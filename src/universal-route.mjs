@@ -36,6 +36,50 @@ const DEFAULT_HOOKWALL_PATH = 'data/hookwall-observations.ndjson';
 const DEFAULT_GNN_EDGES_PATH = 'data/gnn-live-edges.ndjson';
 const DEFAULT_SUBNET_H = 'H9100';
 
+// Dan-hookwall-modernization-2026-05-15 fix #5 (proof_prediction_action_split):
+// "Visual proof, GNN prediction, and runtime action must be separate edge classes."
+// Backed empirically by 1M run hookwall_gnn_gc lane (697 marks score=1.000).
+export const EDGE_CLASSES = Object.freeze({
+  PROOF: 'proof_edge',         // observation evidence — default; what happened
+  PREDICTION: 'prediction_edge', // GNN inference output — what may happen next
+  ACTION: 'action_edge',         // runtime state change — what was done
+});
+const VALID_EDGE_CLASSES = new Set(Object.values(EDGE_CLASSES));
+const DEFAULT_EDGE_CLASS = EDGE_CLASSES.PROOF;
+
+// Dan-fix #1 (backend_rows_before_pixels): observation rows declare their
+// source class; pixel-screenshot rows must reference a backend row PID.
+// Backed by 1M run hookwall_gnn_gc lane (697 marks).
+export const SOURCE_CLASSES = Object.freeze({
+  BACKEND_ROW: 'backend_row',       // default — observation references canonical state
+  PIXEL_SCREENSHOT: 'pixel_screenshot', // image-source; must carry backendRowPid
+  LEGACY_IMAGE: 'legacy_image',     // historical-only evidence (Dan-fix #10)
+});
+const VALID_SOURCE_CLASSES = new Set(Object.values(SOURCE_CLASSES));
+const DEFAULT_SOURCE_CLASS = SOURCE_CLASSES.BACKEND_ROW;
+
+// Dan-fix #9 (authority_levels_visible): each observation row carries a
+// first-class authorityLevel field; not implied by UI convention.
+// Backed by 1M run claim_quarantine lane (723 marks).
+export const AUTHORITY_LEVELS = Object.freeze({
+  PRE_DEV: 'pre-dev',   // sketch / planning / unverified
+  DEV: 'dev',           // local-only, code under test
+  STAGING: 'staging',   // bilateral / peer-witness ready
+  PROD: 'prod',         // operator-cosigned, federation-canonical
+});
+const VALID_AUTHORITY_LEVELS = new Set(Object.values(AUTHORITY_LEVELS));
+const DEFAULT_AUTHORITY_LEVEL = AUTHORITY_LEVELS.DEV;
+
+// Dan-fix #10 (legacy_image_is_evidence_not_runtime): image-bearing
+// artifacts declare their class; runtime proof must reference live state.
+export const IMAGE_CLASSES = Object.freeze({
+  RUNTIME_PROOF: 'runtime_proof',         // live-state screenshot, current
+  HISTORICAL_EVIDENCE: 'historical_evidence', // design/historical, not current
+  NONE: 'none',                            // no image attached (default)
+});
+const VALID_IMAGE_CLASSES = new Set(Object.values(IMAGE_CLASSES));
+const DEFAULT_IMAGE_CLASS = IMAGE_CLASSES.NONE;
+
 function ensureDir(filePath) {
   const dir = path.dirname(filePath);
   if (!fs.existsSync(dir)) {
@@ -65,6 +109,39 @@ export function dualEmitObservation(payload, cosign, opts = {}) {
   const event = payload && typeof payload === 'object' ? payload.event : null;
   const vantage = payload && typeof payload === 'object' ? payload.vantage : null;
 
+  const edgeClass = opts.edgeClass || DEFAULT_EDGE_CLASS;
+  if (!VALID_EDGE_CLASSES.has(edgeClass)) {
+    throw new RangeError(
+      `universal-route: opts.edgeClass must be one of ${[...VALID_EDGE_CLASSES].join(', ')}; got "${edgeClass}"`
+    );
+  }
+
+  const sourceClass = opts.sourceClass || DEFAULT_SOURCE_CLASS;
+  if (!VALID_SOURCE_CLASSES.has(sourceClass)) {
+    throw new RangeError(
+      `universal-route: opts.sourceClass must be one of ${[...VALID_SOURCE_CLASSES].join(', ')}; got "${sourceClass}"`
+    );
+  }
+  if (sourceClass === SOURCE_CLASSES.PIXEL_SCREENSHOT && !opts.backendRowPid) {
+    throw new Error(
+      'universal-route: sourceClass=pixel_screenshot requires opts.backendRowPid (Dan-fix #1 backend_rows_before_pixels)'
+    );
+  }
+
+  const authorityLevel = opts.authorityLevel || DEFAULT_AUTHORITY_LEVEL;
+  if (!VALID_AUTHORITY_LEVELS.has(authorityLevel)) {
+    throw new RangeError(
+      `universal-route: opts.authorityLevel must be one of ${[...VALID_AUTHORITY_LEVELS].join(', ')}; got "${authorityLevel}"`
+    );
+  }
+
+  const imageClass = opts.imageClass || DEFAULT_IMAGE_CLASS;
+  if (!VALID_IMAGE_CLASSES.has(imageClass)) {
+    throw new RangeError(
+      `universal-route: opts.imageClass must be one of ${[...VALID_IMAGE_CLASSES].join(', ')}; got "${imageClass}"`
+    );
+  }
+
   const hookwallRow = {
     schema: 'hookwall-observation.v1',
     ts,
@@ -75,6 +152,10 @@ export function dualEmitObservation(payload, cosign, opts = {}) {
     cosign_seq: cosign?.seq ?? null,
     cosign_row: cosign?.row_hash ?? null,
     cosign_prev: cosign?.antecedent_prev ?? null,
+    sourceClass,
+    backendRowPid: opts.backendRowPid ?? null,
+    authorityLevel,
+    imageClass,
     gate: 'universal-route-default',
     passed_at: Date.now(),
   };
@@ -83,6 +164,10 @@ export function dualEmitObservation(payload, cosign, opts = {}) {
     schema: 'gnn-live-edge.v1',
     ts,
     subnet_h: subnetH,
+    edgeClass,
+    sourceClass,
+    authorityLevel,
+    imageClass,
     from: opts.gnnFrom || `cosign_seq_${cosign?.seq ?? 'unknown'}`,
     to: opts.gnnTo || `channel_${channel.replace(/[^a-z0-9_]/gi, '_')}`,
     verb: opts.gnnVerb || event || 'universal_route_emit',
@@ -118,10 +203,22 @@ export const STATUS = Object.freeze({
   default_hookwall_path: DEFAULT_HOOKWALL_PATH,
   default_gnn_edges_path: DEFAULT_GNN_EDGES_PATH,
   fail_soft: true,
+  edge_classes: EDGE_CLASSES,
+  default_edge_class: DEFAULT_EDGE_CLASS,
+  source_classes: SOURCE_CLASSES,
+  default_source_class: DEFAULT_SOURCE_CLASS,
+  authority_levels: AUTHORITY_LEVELS,
+  default_authority_level: DEFAULT_AUTHORITY_LEVEL,
+  image_classes: IMAGE_CLASSES,
+  default_image_class: DEFAULT_IMAGE_CLASS,
   spec: 'project_federation_IS_an_LLM_reframe_2026_05_26.md',
   canon_refs: [
     'project_federation_IS_an_LLM_reframe_2026_05_26.md',
     'project_wave_18B_21_agent_bilateral_diagnosis_canon_2026_05_26.md',
     'feedback_competing_port_hilbert_subdivide_via_revolver_never_kill_2026_05_24.md',
+    'dan_hookwall_modernization_2026_05_15_fix_5_proof_prediction_action_split',
+    'dan_hookwall_modernization_2026_05_15_fix_1_backend_rows_before_pixels',
+    'dan_hookwall_modernization_2026_05_15_fix_9_authority_levels_visible',
+    'dan_hookwall_modernization_2026_05_15_fix_10_legacy_image_is_evidence_not_runtime',
   ],
 });
