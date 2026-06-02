@@ -7,7 +7,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { mintPID } from '../src/pid-minter.mjs';
 
-const LANES = ['nervous', 'circulatory', 'skeletal', 'muscular', 'immune', 'memory'];
+const LANES = ['nervous', 'circulatory', 'skeletal', 'muscular', 'immune', 'memory', 'lymphatic'];
 
 test('distinct actors with same (device, lane, prime) yield distinct PIDs', () => {
   const a = mintPID({ actor: 0, device: 'dev-a', lane: 'nervous', prime: 2 });
@@ -39,14 +39,14 @@ test('equal tuples always yield equal PIDs', () => {
   assert.equal(a, b);
 });
 
-test('all 6 canonical lanes are accepted', () => {
+test('all 7 canonical lanes are accepted', () => {
   for (const lane of LANES) {
     const pid = mintPID({ actor: 0, device: 'd', lane, prime: 2 });
     assert.ok(pid, `lane ${lane} must mint`);
   }
 });
 
-test('lane outside the canonical 6 is rejected', () => {
+test('lane outside the canonical 7 is rejected', () => {
   assert.throws(
     () => mintPID({ actor: 0, device: 'd', lane: 'not-a-real-lane', prime: 2 }),
     /lane/i

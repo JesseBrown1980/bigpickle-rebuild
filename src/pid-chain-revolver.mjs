@@ -11,7 +11,11 @@ import { mintPID } from './pid-minter.mjs';
 import { primeAt } from './primes.mjs';
 import { preWarmCandidates } from './mtp-heads.mjs';
 
-const LANE_CYCLE = ['nervous', 'circulatory', 'skeletal', 'muscular', 'immune', 'memory'];
+// 7-lane canon — 7th LYMPHATIC minted 2026-05-28 per Special-OP-JESSE vote
+// (operator chant "vote LYMPHATIC, do them all" at chain head 3456).
+// LYMPHATIC corresponds to GULP + drain pipeline :4920-:4924 substrate (drain/cleanse class).
+// Vote-quorum satisfied by Special-OP-JESSE under Foundation v3 LAW 2-month decision window.
+export const LANE_CYCLE = ['nervous', 'circulatory', 'skeletal', 'muscular', 'immune', 'memory', 'lymphatic'];
 
 export class PIDChainRevolver {
   constructor(opts = {}) {

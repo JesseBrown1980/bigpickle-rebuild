@@ -9,7 +9,10 @@
 import { createHash } from 'node:crypto';
 import { glyphAt } from './behcs.mjs';
 
-const LANES = ['nervous', 'circulatory', 'skeletal', 'muscular', 'immune', 'memory'];
+// 7-lane canon — 7th LYMPHATIC minted 2026-05-28 per Special-OP-JESSE vote (chain seq pending).
+// LYMPHATIC = drain/cleanse substrate (maps to GULP + drain pipeline :4920-:4924).
+// Vote-quorum satisfied by Special-OP-JESSE under Foundation v3 LAW 2-month decision window.
+const LANES = ['nervous', 'circulatory', 'skeletal', 'muscular', 'immune', 'memory', 'lymphatic'];
 const LANE_SET = new Set(LANES);
 
 // Big-Pickle busCount target per 05-100B-PID-MINTING.md.

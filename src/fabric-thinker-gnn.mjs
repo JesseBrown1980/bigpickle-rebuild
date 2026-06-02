@@ -39,7 +39,7 @@ export function pidQueryToGraph(pid, query) {
   // 1 edge: pid-node → query-node
   // Edge features: derived from combined sha of (pid + query)
   const edgeHash = crypto.createHash('sha256').update(String(pid) + '|' + String(query)).digest();
-  const edge_features = Array.from({ length: 13 }, (_, i) => norm(edgeHash[i]));
+  const edge_features = Array.from({ length: 3 }, (_, i) => norm(edgeHash[i]));
   return {
     nodes: [node_pid, node_query],
     edges: [[0, 1]],
@@ -153,6 +153,36 @@ export async function realInfer(pid, query, opts = {}) {
   };
 }
 
+// === Public: realInferEnsemble (calls L0 :4792 + L4 :4793, dual-voter) ===
+//
+// Calls realInfer() against both GNN ports concurrently via Promise.allSettled
+// so a single unreachable server never blocks the result. Each voter contributes
+// its score; the ensemble_score is the arithmetic mean.
+//
+// Return shape:
+//   { l0_score, l4_score, ensemble_score, gnn_real }
+//   l0_score / l4_score = 0 when the corresponding server is unreachable
+//   gnn_real = true if AT LEAST ONE server returned ok:true
+
+export async function realInferEnsemble(pid, queryText, opts = {}) {
+  const [l0, l4] = await Promise.allSettled([
+    realInfer(pid, queryText, { ...opts, gnn_port: opts.l0_port ?? DEFAULT_GNN_PORT }),
+    realInfer(pid, queryText, { ...opts, gnn_port: opts.l4_port ?? 4793 }),
+  ]);
+  const l0r = l0.status === 'fulfilled' ? l0.value : { gnn_real: false, score: 0 };
+  const l4r = l4.status === 'fulfilled' ? l4.value : { gnn_real: false, score: 0 };
+  // realInfer returns gnn_score when GNN is real; fall back to 0 for sha-stub/error paths
+  const l0_score = typeof l0r.gnn_score === 'number' ? l0r.gnn_score : (typeof l0r.score === 'number' ? l0r.score : 0);
+  const l4_score = typeof l4r.gnn_score === 'number' ? l4r.gnn_score : (typeof l4r.score === 'number' ? l4r.score : 0);
+  const ensemble_score = (l0_score + l4_score) / 2;
+  return {
+    l0_score,
+    l4_score,
+    ensemble_score,
+    gnn_real: (l0r.gnn_real === true) || (l4r.gnn_real === true),
+  };
+}
+
 // === Public: checkReady (health probe) ===================================
 
 export async function checkReady(opts = {}) {
@@ -188,8 +218,8 @@ export const STATUS = Object.freeze({
   default_endpoint: `http://${DEFAULT_GNN_HOST}:${DEFAULT_GNN_PORT}`,
   composes_with: 'fabric-thinker.descriptorInfer',
   fallback_safe: true,
-  api: ['realInfer', 'pidQueryToGraph', 'checkReady'],
-  encoding: '2-node graph (pid + query) with 6 sha-derived floats per node, 1 edge, 13 edge features',
+  api: ['realInfer', 'realInferEnsemble', 'pidQueryToGraph', 'checkReady'],
+  encoding: '2-node graph (pid + query) with 6 sha-derived floats per node, 1 edge, 3 edge features',
   cascade_layers: ['L0_EdgeLevel', 'L1_Contrastive', 'L2_Prototype', 'L4_GSLGNN'],
   state_dict_rekey_pending: 'L1/L2/L4 .pt files exist but torch-version key drift blocks load; L0 partial-load functional',
   spec: 'project_quintuple_authority_grant_plus_master_architecture_2026_05_25.md Phase 6',
