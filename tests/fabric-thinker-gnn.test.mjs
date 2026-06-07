@@ -35,12 +35,12 @@ describe('fabric-thinker-gnn — pidQueryToGraph', () => {
       assert.ok(f >= 0 && f <= 1, 'feature ' + f + ' out of [0,1]');
     }
   });
-  test('returns 1 edge with 13 features', () => {
+  test('returns 1 edge with 3 features (Python server requires len==3)', () => {
     const g = pidQueryToGraph('PID-A', 'q');
     assert.strictEqual(g.edges.length, 1);
     assert.deepStrictEqual(g.edges[0], [0, 1]);
     assert.strictEqual(g.edge_features.length, 1);
-    assert.strictEqual(g.edge_features[0].length, 13);
+    assert.strictEqual(g.edge_features[0].length, 3);
   });
   test('deterministic: same input → same graph', () => {
     const a = pidQueryToGraph('PID-X', 'query-X');

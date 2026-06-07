@@ -39,7 +39,7 @@ test('triad: revolver.preWarm consumes MTP candidates → speculative PIDs are 1
     assert.match(c.speculative_pid, /^[a-f0-9]{16}$/);
     assert.ok(c.cp_predicted >= 2 && c.cp_predicted <= 1023);
     assert.equal(c.bh_coord_predicted.length, 3);
-    assert.ok(['nervous', 'circulatory', 'skeletal', 'muscular', 'immune', 'memory'].includes(c.lane));
+    assert.ok(['nervous', 'circulatory', 'skeletal', 'muscular', 'immune', 'memory', 'lymphatic'].includes(c.lane));
   }
 });
 
