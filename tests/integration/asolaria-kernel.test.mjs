@@ -42,12 +42,13 @@ test('BOUNDARY codifies the real/virtual rule at 42', () => {
 
 test('SCORE primitive is bulletproof — always returns, honest provenance', async () => {
   // skip L0 to force fallback path; must still return a valid composite
-  const s = await score('BH.DISTRICT.TEST.R00000.ABC', 'some answer content here', { skipL0: true });
+  const s = await score('BH.DISTRICT.TEST.R00000.ABC', 'some answer content here', { skipL0: true, skipL4: true, skipFabricGNN: true });
   assert.ok(s.composite >= 0 && s.composite <= 1, 'composite in [0,1]');
   assert.equal(s.l0_real, false, 'honest: L0 not used');
+  assert.equal(s.l4_real, false, 'honest: L4 not used');
   assert.ok(s.provenance.includes('fallback'), 'provenance admits fallback');
   assert.ok(['FORWARD_GNN_MARK_GENIUS', 'REVERSE_GAIN_MARK_MISTAKE'].includes(s.mark));
-  assert.equal(s.l4_benched, true, 'L4 stays benched');
+  assert.equal(KERNEL.SCORE.l4_status.status, 'ROUTED', 'L4 is routed in the 7-GNN score ensemble');
   assert.ok(typeof s.signals.shannon === 'number' && typeof s.signals.baseline === 'number');
 });
 

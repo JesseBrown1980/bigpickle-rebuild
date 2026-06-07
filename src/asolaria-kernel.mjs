@@ -24,7 +24,7 @@ import { serializeEnvelope, writeHBP } from './hbp-emitter.mjs';
 // PRIMITIVE 3 — INTEGRITY (+ read)
 import { readHBP, parseEnvelope, parsePipeRow, parsePipeFile, verifyHBP, detectFormat } from './hbp-reader.mjs';
 // PRIMITIVE 4 — SCORE
-import { score, reverseGain, shannonSignal, L4_BENCHED } from './asolaria-score.mjs';
+import { score, reverseGain, shannonSignal, L4_STATUS } from './asolaria-score.mjs';
 // PRIMITIVE 5 — ROUTE
 import { dispatchRoom, rotateRoom, routeToPrism, AGENT_TYPE_BY_DISTRICT, hookwallGate } from './room-dispatcher.mjs';
 // ENTRY GATE — HOOKWALL (the "no bypass" front door; composes all five)
@@ -40,7 +40,7 @@ export const KERNEL = Object.freeze({
   ADDRESS: { pid: roomPid, hilbert: hilbertXY, createDistrict, createAllDistricts, roomDir, districts: DISTRICTS, substrate: SUBSTRATE_ROOT, sha16, sha8 },
   CONTENT: { serialize: serializeEnvelope, write: writeHBP },
   INTEGRITY: { read: readHBP, parseEnvelope, parseRow: parsePipeRow, parseFile: parsePipeFile, verify: verifyHBP, detect: detectFormat },
-  SCORE: { score, reverseGain, shannon: shannonSignal, l4_benched: L4_BENCHED },
+  SCORE: { score, reverseGain, shannon: shannonSignal, l4_status: L4_STATUS, l4_benched: false },
   ROUTE: { dispatch: dispatchRoom, rotate: rotateRoom, toPrism: routeToPrism, agentTypes: AGENT_TYPE_BY_DISTRICT, hookwall: hookwallGate },
 
   // ENTRY GATE — every action enters HOOKWALL first (no bypass). Composes all five.

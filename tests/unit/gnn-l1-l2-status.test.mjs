@@ -17,7 +17,11 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 
-const GNN_SIDECAR = "C:/Users/acer/Asolaria/services/gnn-sidecar";
+const ACER_GNN_SIDECAR = "C:/Users/acer/Asolaria/services/gnn-sidecar";
+const GNN_SIDECAR = process.env.ASOLARIA_GNN_SIDECAR
+  || (fs.existsSync(ACER_GNN_SIDECAR) ? ACER_GNN_SIDECAR : path.resolve(process.cwd(), "services", "gnn-sidecar"));
+const HAS_GNN_SIDECAR = fs.existsSync(GNN_SIDECAR);
+const SKIP_MISSING_SIDECAR = HAS_GNN_SIDECAR ? false : `GNN sidecar root not present on this host: ${GNN_SIDECAR}`;
 
 // ---------------------------------------------------------------------------
 // L1 PrototypeGNN
@@ -26,14 +30,14 @@ const GNN_SIDECAR = "C:/Users/acer/Asolaria/services/gnn-sidecar";
 describe("L1 PrototypeGNN checkpoint", () => {
   const checkpointPath = path.join(GNN_SIDECAR, "prototype_model.pt");
 
-  it("prototype_model.pt exists", () => {
+  it("prototype_model.pt exists", { skip: SKIP_MISSING_SIDECAR }, () => {
     assert.ok(
       fs.existsSync(checkpointPath),
       `checkpoint not found at ${checkpointPath}`
     );
   });
 
-  it("prototype_model.pt is non-trivial (>= 50 KB)", () => {
+  it("prototype_model.pt is non-trivial (>= 50 KB)", { skip: SKIP_MISSING_SIDECAR }, () => {
     const { size } = fs.statSync(checkpointPath);
     assert.ok(
       size >= 50_000,
@@ -41,7 +45,7 @@ describe("L1 PrototypeGNN checkpoint", () => {
     );
   });
 
-  it("prototype_inference_server.py exists at :4795", () => {
+  it("prototype_inference_server.py exists at :4795", { skip: SKIP_MISSING_SIDECAR }, () => {
     const serverPath = path.join(GNN_SIDECAR, "prototype_inference_server.py");
     assert.ok(
       fs.existsSync(serverPath),
@@ -49,7 +53,7 @@ describe("L1 PrototypeGNN checkpoint", () => {
     );
   });
 
-  it("prototype_inference_server.py declares PORT 4795", () => {
+  it("prototype_inference_server.py declares PORT 4795", { skip: SKIP_MISSING_SIDECAR }, () => {
     const serverPath = path.join(GNN_SIDECAR, "prototype_inference_server.py");
     const src = fs.readFileSync(serverPath, "utf8");
     assert.ok(
@@ -58,7 +62,7 @@ describe("L1 PrototypeGNN checkpoint", () => {
     );
   });
 
-  it("prototype_inference_server.py loads PrototypeGNN with correct dims", () => {
+  it("prototype_inference_server.py loads PrototypeGNN with correct dims", { skip: SKIP_MISSING_SIDECAR }, () => {
     const serverPath = path.join(GNN_SIDECAR, "prototype_inference_server.py");
     const src = fs.readFileSync(serverPath, "utf8");
     // node_input_dim=6, hidden_dim=64, num_classes=2, num_prototypes_per_class=3
@@ -80,14 +84,14 @@ describe("L1 PrototypeGNN checkpoint", () => {
 describe("L2 ContrastiveGNN checkpoint (TRAINED 2026-06-01 — gap closed)", () => {
   const checkpointPath = path.join(GNN_SIDECAR, "contrastive_model.pt");
 
-  it("contrastive_model.pt now EXISTS (trained this session, gap closed)", () => {
+  it("contrastive_model.pt now EXISTS (trained this session, gap closed)", { skip: SKIP_MISSING_SIDECAR }, () => {
     assert.ok(
       fs.existsSync(checkpointPath),
       `contrastive_model.pt expected at ${checkpointPath} — train_contrastive.py was run 2026-06-01`
     );
   });
 
-  it("L2 stays BENCHED until spread-verified (same degenerate-corpus caveat as L4)", () => {
+  it("L2 stays BENCHED until spread-verified (same degenerate-corpus caveat as L4)", { skip: SKIP_MISSING_SIDECAR }, () => {
     // Trained to ~99.92% on the 40-benign-vs-315k-suspicious corpus — the same
     // imbalance that left L4 a dead constant 0.5292. Present but NOT trusted as a
     // voter until a class-weighted retrain passes spread std > 0.01. The inference
@@ -99,7 +103,7 @@ describe("L2 ContrastiveGNN checkpoint (TRAINED 2026-06-01 — gap closed)", () 
     );
   });
 
-  it("train_contrastive.py exists and is ready to produce contrastive_model.pt", () => {
+  it("train_contrastive.py exists and is ready to produce contrastive_model.pt", { skip: SKIP_MISSING_SIDECAR }, () => {
     const trainerPath = path.join(GNN_SIDECAR, "train_contrastive.py");
     assert.ok(
       fs.existsSync(trainerPath),

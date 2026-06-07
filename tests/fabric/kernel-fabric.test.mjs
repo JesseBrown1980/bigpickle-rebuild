@@ -55,8 +55,9 @@ test('FABRIC: probe live federation services the kernel composes with', async ()
 test('FABRIC: kernel SCORE degrades honestly when GNN dark', async () => {
   const { score } = await import('../../src/asolaria-score.mjs');
   // force GNN-off path — must still return a valid composite + honest provenance
-  const s = await score('BH.FABRIC.TEST', 'content', { skipL0: true });
+  const s = await score('BH.FABRIC.TEST', 'content', { skipL0: true, skipL4: true, skipFabricGNN: true });
   assert.ok(s.composite >= 0 && s.composite <= 1);
   assert.equal(s.l0_real, false);
+  assert.equal(s.l4_real, false);
   assert.ok(s.provenance.includes('fallback'), 'honest: admits fallback when GNN unreachable');
 });

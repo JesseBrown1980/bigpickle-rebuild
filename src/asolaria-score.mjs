@@ -31,6 +31,7 @@ export const L4_STATUS = Object.freeze({
   note: 'process alive, now queried alongside L0. May show dead-constant 0.5292 until corpus rebalance.',
   rebalance_when: 'retrain spread std > 0.01 on balanced corpus',
 });
+export const L4_BENCHED = false;
 
 // ── G1/G2/G3/G4 FABRIC QUERY — in-process signals from :4949 ────────────────
 // Queries :4949/api/gnn/score for in-process GNN plane signals.
@@ -143,6 +144,9 @@ export async function score(pid, content, opts = {}) {
   // ── (h) sha baseline — deterministic fallback ─────────────────────────────
   signals.baseline = +shaBaseline(pid, content).toFixed(4);
   provenance_parts.push('baseline:always');
+  if (!signals.l0 && !signals.l4 && !signals.g1 && !signals.g2 && !signals.g3 && !signals.g4_state) {
+    provenance_parts.push('fallback:deterministic');
+  }
 
   // ── COMPOSITE — weight real signals, honest about provenance ──────────────
   // Weights: L0=0.30, L4=0.15, G1=0.10, G2=0.10, G3=0.10, Shannon=0.15, Baseline=0.10

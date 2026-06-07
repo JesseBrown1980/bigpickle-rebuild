@@ -5,7 +5,7 @@
 
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
-import { fireBatch } from '../../src/fabric-thinker.mjs';
+import { fireBatch } from '../src/fabric-thinker.mjs';
 
 // === Offline: mock substrate ==============================================
 
