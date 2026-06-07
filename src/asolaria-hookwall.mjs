@@ -17,6 +17,7 @@ import { createHash } from 'node:crypto';
 import { appendFileSync, mkdirSync, existsSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { score as scorePrimitive, reverseGain } from './asolaria-score.mjs';
+import { fischerEval, VERDICT as FISCHER_VERDICT } from './fischer-kernel.mjs';
 
 function sha16(s) { return createHash('sha256').update(String(s)).digest('hex').slice(0, 16); }
 function sha8(s) { return sha16(s).slice(0, 8); }
@@ -69,11 +70,26 @@ export async function pass(envelope, opts = {}) {
   const content = typeof envelope.payload === 'string' ? envelope.payload : JSON.stringify(envelope.payload ?? envelope.verb ?? '');
   const sc = await scorePrimitive(pid, content, opts);
 
-  // 3. GATE — three outcomes, never a silent drop
+  // 2.5 FISCHER-EVAL — anti-blunder gate (PIXELS FIRST: HBI emitted before gate decision)
+  const fischer = fischerEval(pid, envelope, sc, { prevHash: opts.prevHash, strict: opts.fischerStrict });
+  if (opts.fischerLedgerPath && !opts.dryRun) {
+    try {
+      if (!existsSync(dirname(opts.fischerLedgerPath))) mkdirSync(dirname(opts.fischerLedgerPath), { recursive: true });
+      appendFileSync(opts.fischerLedgerPath, fischer.row + '\n', 'utf8');
+    } catch { /* ledger write failure must not crash the gate */ }
+  }
+
+  // 3. GATE — three outcomes, informed by both score AND Fischer verdict. Never a silent drop.
   let verdict;
-  if (opts.observeOnly) verdict = VERDICT.OBSERVE_ONLY;
-  else if (sc.promoted) verdict = VERDICT.FARM_GEM;
-  else verdict = VERDICT.BLOCK_PRESERVE; // blocked but PRESERVED as evidence
+  if (opts.observeOnly) {
+    verdict = VERDICT.OBSERVE_ONLY;
+  } else if (fischer.verdict === FISCHER_VERDICT.BLOCK || fischer.verdict === FISCHER_VERDICT.REFUTE) {
+    verdict = VERDICT.BLOCK_PRESERVE;          // Fischer says blunder/refuted → preserve evidence
+  } else if (sc.promoted && fischer.verdict === FISCHER_VERDICT.PROCEED) {
+    verdict = VERDICT.FARM_GEM;                // both score AND Fischer agree → promote
+  } else {
+    verdict = VERDICT.BLOCK_PRESERVE;          // disagreement → conservative preserve
+  }
 
   // 4. CONTENT + INTEGRITY — write the observation row (tamper-evident chain)
   const { row, rowHash } = observationRow(pid, envelope, verdict, sc, opts.prevHash);

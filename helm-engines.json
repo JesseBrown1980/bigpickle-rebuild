@@ -50,6 +50,12 @@
       "note": "loads Foundation v1 envelopes (.behcs-256.json + .ndjson)"
     },
     {
+      "name": "fischer-kernel",
+      "kind": "file",
+      "path": "D:/bigpickle-rebuild/src/fischer-kernel.mjs",
+      "note": "BHFISCHER-KERNEL-v1 — anti-blunder evaluator; sits between VERIFY and HOOKWALL; HBP-only; never self-authorizes; PIXELS FIRST (HBI sidecar)"
+    },
+    {
       "name": "triple-quant",
       "kind": "file",
       "path": "C:/HyperBEHCS/lib/hyperbehcs-core.cjs",
