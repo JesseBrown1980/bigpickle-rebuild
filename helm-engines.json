@@ -56,6 +56,18 @@
       "note": "BHFISCHER-KERNEL-v1 — anti-blunder evaluator; sits between VERIFY and HOOKWALL; HBP-only; never self-authorizes; PIXELS FIRST (HBI sidecar)"
     },
     {
+      "name": "fischer-scorer",
+      "kind": "file",
+      "path": "D:/bigpickle-rebuild/src/fischer-scorer.mjs",
+      "note": "FischerScorer — the anti-blunder evaluator AS a white-room scorer (drop-in alongside DeterministicScorer + L0GnnScorer); maps verdict/cpl -> bounded [0,1]"
+    },
+    {
+      "name": "fischer-live",
+      "kind": "http",
+      "path": "http://127.0.0.1:4794",
+      "note": "LIVE Fischer host — POST /fischer/eval (text/plain HBP) -> FISCHERv1 row; GET /fischer/ledger.hbp; the running service that makes the kernel evaluate live traffic"
+    },
+    {
       "name": "triple-quant",
       "kind": "file",
       "path": "C:/HyperBEHCS/lib/hyperbehcs-core.cjs",
