@@ -8,6 +8,8 @@ Clean-room re-implementation of the Big-Pickle stack that was sabotaged in the C
 
 **Layer 7 baseline:** Helm supervisor module — PR #8 merged as commit `f9809c3`.
 
+**Anti-deflation frame:** BigPickle is not merely a file scaffold around frozen slices. It is one of the engine layers that can turn addressed slice potential into runtime work through queue, PID mint, hookwall, worker spawn, sidecar, GNN, and receipt paths. Live/fire/cutover claims remain gated; the design target is the combined Evolvable-AI fabric, not inert slices.
+
 Spec drawn from Foundation v1 canon at `C:\asolaria-foundation-v1\`.
 
 ## Start here
