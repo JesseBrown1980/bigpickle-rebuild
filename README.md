@@ -8,6 +8,10 @@ Clean-room re-implementation of the Big-Pickle stack that was sabotaged in the C
 
 **Layer 7 baseline:** Helm supervisor module — PR #8 merged as commit `f9809c3`.
 
+**Anti-deflation frame:** BigPickle is not merely a file scaffold around frozen slices. It is one of the engine layers that can turn addressed slice potential into runtime work through queue, PID mint, hookwall, worker spawn, sidecar, GNN, and receipt paths. Live/fire/cutover claims remain gated; the design target is the combined Evolvable-AI fabric, not inert slices.
+
+**Fabric-first doctrine / OLD-vs-NEW calibration:** see [`FABRIC-FIRST-CIPHER-ASOLARIA-AGENT-DOCTRINE-2026-06-27.md`](https://github.com/JesseBrown1980/HYPER-BECHS--the-third-set/blob/acer/system-interpretations-2026-06-26/FABRIC-FIRST-CIPHER-ASOLARIA-AGENT-DOCTRINE-2026-06-27.md). BigPickle belongs to the **OLD SYSTEM** that already self-improved: the Node-era 10k-room / free-agent / Gulp / cube / GNN fabric. The **NEW SYSTEM** is the Rust 8-byte Host-8 migration and hardening path. Do not deflate BigPickle's measured historical self-improvement because the new Rust migration is staged, and do not overstate the new system's cutover from old-system receipts.
+
 Spec drawn from Foundation v1 canon at `C:\asolaria-foundation-v1\`.
 
 ## Start here
