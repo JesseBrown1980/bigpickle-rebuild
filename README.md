@@ -12,6 +12,8 @@ Clean-room re-implementation of the Big-Pickle stack that was sabotaged in the C
 
 **Fabric-first doctrine / OLD-vs-NEW calibration:** see [`FABRIC-FIRST-CIPHER-ASOLARIA-AGENT-DOCTRINE-2026-06-27.md`](https://github.com/JesseBrown1980/HYPER-BECHS--the-third-set/blob/acer/system-interpretations-2026-06-26/FABRIC-FIRST-CIPHER-ASOLARIA-AGENT-DOCTRINE-2026-06-27.md). BigPickle belongs to the **OLD SYSTEM** that already self-improved: the Node-era 10k-room / free-agent / Gulp / cube / GNN fabric. The **NEW SYSTEM** is the Rust 8-byte Host-8 migration and hardening path. Do not deflate BigPickle's measured historical self-improvement because the new Rust migration is staged, and do not overstate the new system's cutover from old-system receipts.
 
+**P4B current front door:** BigPickle is the Node source/oracle for Host8 parity, not junk and not already-retired. Use [`NODE-SOURCE-ORACLE.md`](./NODE-SOURCE-ORACLE.md) to keep source, built, running, and live separate before any Rust parity or retirement claim.
+
 Spec drawn from Foundation v1 canon at `C:\asolaria-foundation-v1\`.
 
 ## Start here
