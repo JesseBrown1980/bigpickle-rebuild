@@ -50,6 +50,17 @@ tables below to see where you are; follow the links to walk the rest.
 | `-6-cyl-generator` | satellite generator |
 | `asolaria-whiteroom-engine` · `35-TB-google-AI-Ultra-migration` | (= LEG-1 + LEG-4, listed under External legs) |
 
+## Prism/Comb 0-loss (2026-07-01) — satellite entry
+This repo IS the pre-migration stratum: the Node-era emitter / GC / loop suite the Rust 8-byte host
+upgrades FROM. "Old decodes new" is a theorem here, not a slogan — every level translator in the 43+
+ladder is a bijection (`T_ji ∘ T_ij = id`, so `H(f(X)) = H(X)`): the big-pickle era is a **bridge rung**
+of that groupoid, re-related with 0 loss, never compressed below Shannon's `E[bits] ≥ H(X)`. Scope:
+only the **256↔1024 rung is MEASURED** (Q-PRISM `53023b6`/`79e8d63`/`de00aca` — 5 bytes ⇄ 4 symbols at
+`lcm(8,10)=40` bits, sha256-identical round-trip); the full ladder is **CANON frame**; the Node→Host-8
+rung itself is **UNVERIFIED until its own round-trip proof**. Cross-links: waves-cascades (comb=avoid /
+prism=cause duality), what-is-asolaria (reductions boundary), N-Nest (integrity dual), Metatagging
+(physics grounding). E=0 — describe-only; the migration crank stays operator-gated.
+
 ## Current state & evolution (2026-06-28) — read this, don't flatten it
 Asolaria is a **2.5-month archaeology**, not a flat stack. **Capability lineage:** auto-approval switch →
 dashboard → multi-agent → local+web MCP + code-wiki → index language (pixels-first) → cubes-as-catalogs
