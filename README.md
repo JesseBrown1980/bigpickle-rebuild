@@ -14,6 +14,50 @@ Clean-room re-implementation of the Big-Pickle stack that was sabotaged in the C
 
 **P4B current front door:** BigPickle is the Node source/oracle for Host8 parity, not junk and not already-retired. Use [`NODE-SOURCE-ORACLE.md`](./NODE-SOURCE-ORACLE.md) to keep source, built, running, and live separate before any Rust parity or retirement claim.
 
+## Pre-Asolaria GNN origin — now byte-proven
+
+BigPickle's L0 and L4 scorers descend directly from Jesse's pre-Asolaria healthcare edge-level GNN
+work. The healthcare `EdgeLevelGNN`, `PrototypeGNN`, `ContrastiveGNN`, and `GSLGNN` files were copied
+byte-for-byte into the later Asolaria GNN sidecar; each source/target pair has the same Git blob SHA.
+BigPickle then orchestrates the L0 `:4792` and L4 `:4793` sidecars together with G1 edge-mining,
+G2 forward-genius, G3 reverse-gain, G4 GLSM, OmniShannon, deterministic fallback, Fischer, and
+Hookwall.
+
+The healthcare source records the pre-Asolaria comparative results, but its checked-in service has
+a commented checkpoint-load block. Therefore those figures are tagged **repository-reported
+training results**, while the later `Asolaria-fnns-trained-and-reverse-gnns-many` repository holds
+the subsequent trained `.pt` artifacts/manifests.
+
+Read the full provenance, model table, byte SHAs, hardware split, and Path-1/Path-2 connection in:
+
+[`docs/PRE-ASOLARIA-GNN-LINEAGE-AND-STORAGE-APPLICABILITY-2026-07-11.md`](docs/PRE-ASOLARIA-GNN-LINEAGE-AND-STORAGE-APPLICABILITY-2026-07-11.md)
+
+## Storage-backed applicability — hard drive/SSD as the durable system tier
+
+BigPickle is multi-drive aware and its default Helm queue lives on `D:`. Across the connected fabric,
+HBP/HBI/SHA/HEX receipts, cube bodies, GULP archives, white-room records, content-addressed stores,
+queues, and cold agent state can live on HDD/SSD while RAM holds only the active bounded window.
+
+This makes the following usable on storage-rich, low-GPU machines: PID/hash addressing, dispatch,
+Fischer/Hookwall rules, deterministic OmniShannon, BEHCS rebasing, CRT Path-2 recovery, Path-1
+content recall, white-room compaction, ledgers, and N-Nest verification. Trained GNN/LLM tensor
+inference can remain an optional CPU/GPU sidecar.
+
+The accurate claim is **not** “disk is a GPU.” It is that the fabric's memory, recovery, proof,
+routing, and orchestration planes no longer require all state to remain resident in GPU VRAM or
+system RAM. Commodity desktops, edge servers, archival nodes, and NAS-like machines can participate
+meaningfully even when only a minority of nodes have accelerators.
+
+## Verification provenance — 2026-07-11
+
+- `AUDITED_GPT_5_6_PRO`: complete healthcare-model, blob-lineage, BigPickle scorer/Fischer, trained
+  GNN, Q-PRISM Path-1/Path-2, watcher, white-room, cube-mint, dispatcher, HyperHermes, reductions,
+  algorithms, and N-Nest audit.
+- `MEASURED_CLAUDE_FABLE5_THIRD_SEAT`, supplied by the operator: Path 1 rustc 1.97 **19/19** and
+  Path 2 rustc 1.97 **30/30** on a third independent container.
+- Those Rust results validate the recovery substrate and are not falsely relabeled as a new
+  BigPickle Node-suite execution.
+
 Spec drawn from Foundation v1 canon at `C:\asolaria-foundation-v1\`.
 
 ## Start here
